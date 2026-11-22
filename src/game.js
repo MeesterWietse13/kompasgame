@@ -112,6 +112,10 @@ export class Game {
     this.player.spawn(SPAWN.x, SPAWN.z, SPAWN.bearing);
     this.hud.hideStart(); this.hud.showGameUi();
     this.running = true; this.input.enabled = true;
+    this.hud.setSensLabel(this.input.sens);
+    // na "Level herstarten" start het spel zonder klik: het geluid wordt wakker bij de eerste toets of klik
+    const wake = () => { const c = this.audio.ctx; if (c && c.state === 'suspended') c.resume(); };
+    window.addEventListener('keydown', wake); window.addEventListener('pointerdown', wake);
     this.fps.acc = 0; this.fps.frames = 0;
     this._refreshTools();
     this.mission.intro();
@@ -126,22 +130,58 @@ export class Game {
     if (open === this.compass.open) return;
     this.compass.setOpen(open); this.audio.ui('compass'); this._refreshTools();
   }
+  /** Shift: kompas nemen (rechtsonder) -> voor je houden (groot, de muis draait de ring) -> laten zakken. */
+  raiseCompass() {
+    if (!this.inventory.has('compass')) { this.audio.ui('deny'); this.hud.toast(`Je hebt nog geen kompas. Het ligt op de tafel bij de ${LV.hutName.toLowerCase()}.`); return; }
+    if (this.mapView.open) this.setMap(false);
+    if (!this.compass.open) { this.setCompass(true); return; }
+    this.compass.setRaised(!this.compass.raised); this.audio.ui('compass');
+    if (this.compass.raised) this.input.lock();
+  }
+
+  // --- menu (Esc) ---
+  setPause(open) {
+    if (open === this.hud.pauseOpen) return;
+    this.hud.setPause(open);
+    if (open) { this.audio.ui('map'); this._selfUnlock(); }
+    else if (!this.hud.modalOpen && !this.mapView.open) this.input.lock();
+  }
+  _selfUnlock() { if (document.pointerLockElement) { this._unlockBySelf = true; document.exitPointerLock(); } }
   _refreshTools() { this.hud.setToolState(this.inventory.has('map'), this.inventory.has('compass'), this.mapView.open, this.compass.open); }
 
   _bind() {
     const { events, hud } = this;
-    events.on('action', ({ name, shift }) => {
+    // Esc in muiskijken: de browser geeft eerst zelf de muis vrij (en stuurt vaak geen toets door).
+    // Dat vangen we hier op: in de periscoop stop je met kijken, anders opent het menu.
+    events.on('pointerlock', ({ locked }) => {
+      if (locked) return;
+      if (this._unlockBySelf) { this._unlockBySelf = false; return; }
+      if (!this.running || hud.modalOpen || this.mapView.open) return;
+      this._escAt = performance.now();
+      if (this.periscope.active) this.periscope.exit(); else this.setPause(true);
+    });
+    events.on('ui:menu', () => { if (this.running) this.setPause(!hud.pauseOpen); });
+    events.on('ui:resume', () => this.setPause(false));
+    events.on('ui:sens', (v) => this.input.setSens(v));
+    events.on('action', ({ name }) => {
       if (!this.running) return;
       if (name === 'escape') {
-        if (hud.readerOpen) hud.closeReader(); else if (this.periscope.active) this.periscope.exit(); else if (hud.helpOpen) hud.setHelp(false); else if (hud.endOpen) hud.setEnd(false);
-        else if (this.mapView.open) this.setMap(false); else if (this.compass.open) this.setCompass(false);
+        if (performance.now() - (this._escAt || 0) < 450) return;   // dezelfde Esc gaf net de muis vrij
+        if (hud.helpOpen) { hud.setHelp(false); return; }
+        if (hud.pauseOpen) { this.setPause(false); return; }
+        if (hud.readerOpen && !hud.readerLocked) { hud.closeReader(); this.input.lock(); return; }
+        if (this.periscope.active) { this.periscope.exit(); return; }
+        if (hud.endOpen) { hud.setEnd(false); return; }
+        if (this.mapView.open) { this.setMap(false); this.input.lock(); return; }
+        this.setPause(true);
         return;
       }
+      if (hud.pauseOpen) { if (name === 'help') hud.setHelp(!hud.helpOpen); return; }
       // naast een keuzevenster aan de zijkant mag de kaart open, zodat je ze kunt raadplegen
       if (hud.readerOpen && name === 'map' && this.inventory.has('map') && document.getElementById('reader').classList.contains('side')) { this.setMap(!this.mapView.open); return; }
-      if (hud.readerOpen) { if (name === 'interact' || name === 'confirm') hud.closeReader(); return; }
+      if (hud.readerOpen) { if (name === 'interact' && !hud.readerLocked) { hud.closeReader(); if (!hud.modalOpen) this.input.lock(); } return; }
       if (this.periscope.active) {
-        if (name === 'interact' || name === 'confirm') this.periscope.mark();
+        if (name === 'interact') this.periscope.mark();
         else if (name === 'help') hud.setHelp(!hud.helpOpen);
         return;
       }
@@ -154,11 +194,13 @@ export class Game {
         if (!this.inventory.has('compass')) { this.audio.ui('deny'); hud.toast(`Je hebt nog geen kompas. Het ligt op de tafel bij de ${LV.hutName.toLowerCase()}.`); return; }
         if (this.mapView.open) this.setMap(false);
         this.setCompass(!this.compass.open);
+      } else if (name === 'raise') {
+        this.raiseCompass();
       } else if (name === 'interact') {
         if (this.mapView.open) return;
         if (!this.interaction.use()) hud.toast('Hier is niets te onderzoeken. Kijk uit naar een zacht lichtpuntje.', 2600);
-      } else if (name === 'ringPlus' && this.compass.open) { this.compass.nudge(shift ? 10 : 1); this.audio.ui('tick'); }
-      else if (name === 'ringMinus' && this.compass.open) { this.compass.nudge(shift ? -10 : -1); this.audio.ui('tick'); }
+      } else if (name === 'ringPlus' && this.compass.open) { this.compass.nudge(1); this.audio.ui('tick'); }
+      else if (name === 'ringMinus' && this.compass.open) { this.compass.nudge(-1); this.audio.ui('tick'); }
     });
     events.on('step', ({ surface, run }) => this.audio.footstep(surface, run));
     events.on('ui:mute', () => { this.audio.setMuted(!this.audio.muted); hud.setMuteLabel(this.audio.muted); });
@@ -176,15 +218,22 @@ export class Game {
     const blocked = this.mapView.open || this.hud.modalOpen;
     if (this.running) {
       const scoping = this.periscope.active;
+      // kompas voor je gehouden: de muis draait de ring, niet je hoofd (de pijltjes blijven werken)
+      const ringMode = this.compass.raised && !blocked && !scoping;
+      this.input.ringMode = ringMode;
+      if (ringMode) {
+        const d = this.input.consumeRing();
+        if (d && this.compass.turn(d * 0.16 * this.input.sens)) { const t = performance.now(); if (t - (this._tickAt || 0) > 45) { this._tickAt = t; this.audio.ui('tick'); } }
+      } else this.input.consumeRing();
       if (scoping) this.periscope.update(dt, this.input, !blocked);
       else this.player.update(dt, this.input, !blocked);
       const label = this.interaction.update(dt, this.player, this.time, !blocked && !scoping);
       this.hud.setPrompt(blocked || scoping ? null : label);
       this.compass.update(dt, this.player.heading, this.player.moving);
       this.audio.update(dt, this.player);
-      this.mission.update(dt);
+      if (!this.hud.pauseOpen) this.mission.update(dt);
       // een venster open? Dan krijgt de speler zijn muisaanwijzer terug
-      if (blocked && document.pointerLockElement) document.exitPointerLock();
+      if (blocked && document.pointerLockElement) this._selfUnlock();
       this._watchFps(raw);
     } else {
       // rustig rondkijken achter het startscherm

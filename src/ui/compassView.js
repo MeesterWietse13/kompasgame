@@ -142,6 +142,7 @@ export class CompassView {
     this.readout = document.getElementById('ring-value');
     this.steps = [1, 2, 3].map((i) => document.getElementById('step-' + i));
     this.open = false;
+    this.raised = false;      // voor je gehouden (groot in het midden): de muis draait de ring
     this.ring = 0;            // ingestelde koers bij de afleesstreep (graden)
     this.needle = 0;          // weergegeven naaldhoek op het scherm (graden, met de klok mee)
     this.needleVel = 0;
@@ -189,6 +190,21 @@ export class CompassView {
   }
 
   nudge(step) { this.ring = wrapDeg(Math.round(this.ring) + step); this._ringChanged(true); }
+  /** De ring een (gebroken) aantal graden verder draaien; geeft true als de afgeronde waarde veranderde. */
+  turn(deg) {
+    const before = Math.round(wrapDeg(this.ring)) % 360;
+    this.ring = wrapDeg(this.ring + deg);
+    const now = Math.round(wrapDeg(this.ring)) % 360;
+    if (now !== before) this._ringChanged(false);
+    return now !== before;
+  }
+  setRaised(r) {
+    if (r === this.raised) return;
+    this.raised = r;
+    this.panel.classList.toggle('raised', r);
+    document.body.classList.toggle('compass-up', r);
+    if (!r) { this.ring = wrapDeg(Math.round(this.ring)); this._ringChanged(true); }
+  }
   _ringChanged(final) {
     this.readout.textContent = String(Math.round(wrapDeg(this.ring)) % 360).padStart(3, '0') + '°';
     this.events.emit('compass:ring', { value: Math.round(wrapDeg(this.ring)) % 360, final });
@@ -196,6 +212,7 @@ export class CompassView {
 
   setOpen(open) {
     this.open = open;
+    if (!open) this.setRaised(false);
     this.panel.classList.toggle('hidden', !open);
     document.getElementById('compass-steps').classList.toggle('hidden', !open);
     if (open) { this.needle = -this.heading + 50; this.needleVel = 0; this._ringChanged(false); }

@@ -21,7 +21,7 @@
     </div>
     <div class="scope-help">
       <span><kbd>←</kbd> <kbd>→</kbd> of de muis: draaien · <kbd>↑</kbd> <kbd>↓</kbd>: hoger of lager kijken</span>
-      <span class="btns"><button id="scope-mark" type="button" class="pill">Richting noteren <kbd>E</kbd></button><button id="scope-exit" type="button" class="pill dark">Stoppen <kbd>Esc</kbd></button></span>
+      <span class="btns"><button id="scope-mark" type="button" class="pill">Richting noteren <kbd>Enter</kbd></button><button id="scope-exit" type="button" class="pill dark">Stoppen <kbd>Esc</kbd></button></span>
     </div>
   </div>
   <div class="letterbox top"></div>
@@ -35,15 +35,14 @@
 
   <div id="tools" class="hidden">
     <button id="btn-help" type="button" title="Hulp en bediening">? Hulp</button>
-    <button id="btn-quality" type="button" title="Grafische kwaliteit wisselen">Beeld: hoog</button>
-    <button id="btn-mute" type="button" title="Geluid aan of uit">Geluid: aan</button>
+    <button id="btn-menu" type="button" title="Menu (Esc)">&#9776; Menu <kbd>Esc</kbd></button>
   </div>
 
-  <div id="mousehint" class="hidden">Klik in het beeld om rond te kijken met de muis · Esc maakt de muis weer vrij</div>
+  <div id="mousehint" class="hidden">Klik in het beeld om rond te kijken met de muis · <kbd>Esc</kbd> = menu</div>
 
   <div id="story" aria-live="polite"></div>
   <div id="toast" class="hidden" aria-live="polite"></div>
-  <div id="prompt" class="hidden"><kbd>E</kbd><span id="prompt-text"></span></div>
+  <div id="prompt" class="hidden"><kbd>Enter</kbd><span id="prompt-text"></span></div>
 
   <nav id="bottombar" class="hidden">
     <button id="btn-map" type="button">
@@ -52,16 +51,16 @@
     </button>
     <button id="btn-compass" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 5l2.2 7L12 19l-2.2-7z" fill="currentColor"/></svg>
-      Kompas <kbd>C</kbd>
+      Kompas <kbd>Shift</kbd>
     </button>
     <button id="btn-interact" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 013 0V10m0-.5V4.5a1.5 1.5 0 013 0V10m0-3.5a1.5 1.5 0 013 0V14a6 6 0 01-6 6h-1.5a5 5 0 01-4-2L4 13.5a1.6 1.6 0 012.6-1.8L9 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Interactie <kbd>E</kbd>
+      Interactie <kbd>Enter</kbd>
     </button>
   </nav>
 
   <ol id="compass-steps" class="hidden">
-    <li id="step-1"><span class="check"></span><span>Draai de <b>ring</b> tot <b id="step-course">070</b> bij de witte streep staat.</span></li>
+    <li id="step-1"><span class="check"></span><span>Houd het kompas voor je (<kbd>Shift</kbd>) en draai de <b>ring</b> met de muis tot <b id="step-course">070</b> bij de witte streep staat.</span></li>
     <li id="step-2"><span class="check"></span><span>Draai <b>jezelf</b> (← en →) tot de <b class="red">rode naald</b> in de <b class="red">rode poort</b> staat.</span></li>
     <li id="step-3"><span class="check"></span><span>Loop <b>rechtdoor</b> in de richting van de pijl (↑).</span></li>
   </ol>
@@ -75,6 +74,7 @@
       <button type="button" data-step="1" class="big" title="Ring 1 graad verder">+</button>
       <button type="button" data-step="10" title="Ring 10 graden verder">+10</button>
     </div>
+    <div id="compass-hint"><span class="low"><kbd>Shift</kbd> kompas voor je houden en de ring instellen</span><span class="up">Beweeg de muis naar links of rechts: de ring draait · <kbd>←</kbd> <kbd>→</kbd> draai jezelf · <kbd>Shift</kbd> kompas laten zakken</span></div>
     <button id="compass-close" type="button" class="close-x" title="Kompas wegsteken (C)">×</button>
   </section>
 
@@ -87,7 +87,7 @@
     <div class="paper">
       <h2 id="reader-title"></h2>
       <div id="reader-body"></div>
-      <button id="reader-close" type="button" class="pill dark">Verder <kbd>E</kbd></button>
+      <button id="reader-close" type="button" class="pill dark">Verder <kbd>Enter</kbd></button>
     </div>
   </section>
 
@@ -104,17 +104,38 @@
       <div class="help-grid">
         <div><kbd>↑</kbd> <kbd>↓</kbd></div><div>Vooruit en achteruit wandelen <span class="muted">(ook Z en S)</span></div>
         <div><kbd>←</kbd> <kbd>→</kbd></div><div>Naar links en rechts draaien <span class="muted">(ook Q en D)</span></div>
-        <div><kbd>Shift</kbd></div><div>Sneller stappen</div>
-        <div>Muis</div><div>Klik één keer in het beeld: daarna kijk je rond door de muis of touchpad te bewegen, ook omhoog en omlaag. <span class="muted">Esc maakt de muis weer vrij.</span></div>
-        <div><kbd>E</kbd></div><div>Iets onderzoeken of gebruiken</div>
+        <div><kbd>Spatie</kbd></div><div>Ingedrukt houden: sneller stappen</div>
+        <div>Muis</div><div>Klik één keer in het beeld: daarna kijk je rond door de muis of touchpad te bewegen, ook omhoog en omlaag.</div>
+        <div><kbd>Enter</kbd></div><div>Iets onderzoeken of gebruiken, een venster sluiten</div>
+        <div><kbd>Shift</kbd></div><div>1 keer: kompas nemen (rechtsonder). Nog eens: het kompas voor je houden; dan draai je de ring met de muis. Nog eens: kompas laten zakken.</div>
+        <div><kbd>C</kbd></div><div>Kompas wegsteken</div>
         <div><kbd>M</kbd></div><div>Kaart openen of sluiten</div>
-        <div><kbd>C</kbd></div><div>Kompas openen of sluiten</div>
-        <div><kbd>+</kbd> <kbd>−</kbd></div><div>Kompasring draaien (als het kompas open is)</div>
-        <div><kbd>Esc</kbd></div><div>Open vensters sluiten</div>
+        <div><kbd>+</kbd> <kbd>−</kbd></div><div>Kompasring 1 graad verder of terug</div>
+        <div><kbd>Esc</kbd></div><div>Menu (hervatten, herstarten, instellingen)</div>
       </div>
       <h3>Zo volg je een koers</h3>
       <p>Zet de ring van je kompas op de koers (bijvoorbeeld 070). Draai daarna jezelf tot de rode naald precies in de rode poort wijst. De pijl bovenaan het kompas wijst nu jouw looprichting aan. Kies een boom of rots in die richting, loop ernaartoe en controleer opnieuw.</p>
-      <button id="help-close" type="button" class="pill dark">Sluiten <kbd>Esc</kbd></button>
+      <button id="help-close" type="button" class="pill dark">Terug <kbd>Esc</kbd></button>
+    </div>
+  </section>
+
+  <section id="pause" class="overlay hidden" aria-label="Menu">
+    <div class="paper center pause">
+      <div class="stamp">Gepauzeerd</div>
+      <h1>Menu</h1>
+      <div class="menu-list" id="menu-main">
+        <button id="menu-resume" type="button" class="pill dark big">Hervatten <kbd>Esc</kbd></button>
+        <button id="menu-help" type="button" class="pill">Hulp en tips <kbd>H</kbd></button>
+        <button id="menu-settings" type="button" class="pill">Instellingen</button>
+        <button id="menu-restart" type="button" class="pill">Level herstarten</button>
+        <button id="menu-levels" type="button" class="pill">Ander level kiezen</button>
+      </div>
+      <div class="menu-list hidden" id="menu-set">
+        <div class="set-row"><span>Beeldkwaliteit</span><button id="btn-quality" type="button" class="pill">Beeld: hoog</button></div>
+        <div class="set-row"><span>Geluid</span><button id="btn-mute" type="button" class="pill">Geluid: aan</button></div>
+        <div class="set-row"><span>Muisgevoeligheid</span><input id="set-sens" type="range" min="0.4" max="2.2" step="0.1" value="1"><b id="set-sens-val">1,0</b></div>
+        <button id="menu-back" type="button" class="pill dark">Terug</button>
+      </div>
     </div>
   </section>
 
@@ -149,7 +170,7 @@
       </div>
       <div class="levels-title">Kies een level</div>
       <ol id="levels"></ol>
-      <div class="start-keys"><kbd>↑</kbd><kbd>↓</kbd> wandelen · <kbd>←</kbd><kbd>→</kbd> draaien <span class="muted">(of Z Q S D)</span> · klik in het beeld = rondkijken met de muis · <kbd>E</kbd> onderzoeken · <kbd>M</kbd> kaart · <kbd>C</kbd> kompas</div>
+      <div class="start-keys"><kbd>↑</kbd><kbd>↓</kbd> wandelen · <kbd>←</kbd><kbd>→</kbd> draaien <span class="muted">(of Z Q S D)</span> · klik in het beeld = rondkijken met de muis · <kbd>Enter</kbd> onderzoeken · <kbd>Shift</kbd> kompas · <kbd>M</kbd> kaart · <kbd>Esc</kbd> menu</div>
     </div>
   </section>
 

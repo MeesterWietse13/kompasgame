@@ -14,7 +14,7 @@ const backSum = (b) => `${pad(b)} ${b < 180 ? '+' : '\u2212'} 180 = ${pad(back(b
 const R1 = pad(back(LEGS[1].bearing)), R2 = pad(back(LEGS[0].bearing));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const RECON_TIPS = [
-  'Ga in de observatiepost naar de periscoop, vlak naast de sergeant, en druk op E. Draai heel langzaam van links naar rechts over het water. Let op een lichtje dat drie keer kort flitst.',
+  'Ga in de observatiepost naar de periscoop, vlak naast de sergeant, en druk op Enter. Draai heel langzaam van links naar rechts over het water. Let op een lichtje dat drie keer kort flitst.',
   'Staat het lichtje in het rode rondje van het kruisje? Druk dan op E. Onderaan lees je de richting in graden.',
   `De terugweg: je loopt de koersen in omgekeerde volgorde, en elke koers omgekeerd. Terugkoers = heenkoers + 180\u00b0. Je kwam op ${T2}\u00b0, dus terug is ${R1}\u00b0. Je vertrok op ${T1}\u00b0, dus het laatste stuk terug is ${R2}\u00b0.`,
   `Volg eerst de verbindingsgang terug tot de ingang. Zet daar je kompas op ${R1} en loop naar de doorgang bij het paaltje. Zet daar je kompas op ${R2}: zo kom je terug bij de grenssteen en de mortier.`,
@@ -25,7 +25,7 @@ const MW = !!(RECON && RECON.mw);
 const K1 = MW ? pad(RECON.legs[0].bearing) : '', K2 = MW ? pad(RECON.legs[1].bearing) : '';
 const WP2 = MW ? RECON.waypoint : null;
 const MW_TIPS = MW ? [
-  'Ga in de observatiepost naar de periscoop, vlak naast de sergeant, en druk op E. Kijk over het niemandsland, voorbij het prikkeldraad, in de kom. Daar staat een kring van zandzakken met een camouflagenet: de stelling van de mijnenwerper.',
+  'Ga in de observatiepost naar de periscoop, vlak naast de sergeant, en druk op Enter. Kijk over het niemandsland, voorbij het prikkeldraad, in de kom. Daar staat een kring van zandzakken met een camouflagenet: de stelling van de mijnenwerper.',
   'Staat de stelling in het kruisje? Druk dan op E. Onderaan lees je de richting in graden. De sergeant meet de afstand.',
   'Een kaartcoördinaat lees je zoals bij zeeslag: eerst de letter bovenaan de kaart (de kolom), dan het cijfer links (de rij). Kijk in welk vak het rode kruisje van de mijnenwerper staat.',
   `Naar de mortierploeg: volg de verbindingsloopgraaf terug naar beneden tot de steunloopgraaf. Ga daar rechtsaf, naar het westen, tot het bordje SORTIE OUEST. Loop de helling op naar buiten.`,
@@ -77,7 +77,7 @@ export class Mission {
       onUse: () => {
         inventory.add('compass'); s.compassMesh.visible = false; audio.ui('pickup');
         this.g.setMap(false); this.g.setCompass(true);
-        hud.toast('Je hebt het veldkompas. Met C open en sluit je het.', 5200);
+        hud.toast('Je hebt het veldkompas. Druk op Shift om het voor je te houden: dan draai je de ring met de muis. Nog eens Shift laat het zakken.', 7000);
         this._gearCheck();
       },
     });
@@ -184,14 +184,14 @@ export class Mission {
       hud.read('Nog \u00e9\u00e9n opdracht', `<p>De sergeant leest je boodschap en wenkt je naar de periscoop. <i>"Vite, petit ! Snel, jongen!"</i></p>
         <p><i>"Vannacht hebben de Duitsers daar in het niemandsland een <b>mijnenwerper</b> ingegraven: een zware mortier die grote bommen tot in onze loopgraven schiet. Ze zijn hem nu aan het richten. Hij mag niet vuren!"</i></p>
         <p><i>"Onze mortierploeg kan hem uitschakelen, maar ze weten niet waar hij staat. En de telefoonlijn naar hen is kapot. Kijk door de periscoop, zet de stelling in het kruisje en lees de <b>richting</b> af. Ik meet de <b>afstand</b>."</i></p>
-        <div class="hint">Een <b>periscoop</b> is een buis met twee spiegels. Zo kijk je over de rand van de loopgraaf zonder je hoofd boven de zandzakken te steken. De periscoop staat vlak naast de sergeant: kijk ernaar en druk op E.</div>`);
+        <div class="hint">Een <b>periscoop</b> is een buis met twee spiegels. Zo kijk je over de rand van de loopgraaf zonder je hoofd boven de zandzakken te steken. De periscoop staat vlak naast de sergeant: kijk ernaar en druk op Enter.</div>`);
       return;
     }
     hud.read('Nog \u00e9\u00e9n opdracht', `<p>De sergeant leest je boodschap en kijkt dan weer door de periscoop. <i>"Goed dat je er bent. Ik heb nog een opdracht voor je."</i></p>
       <p><i>"Nu het donker wordt, zien we het weer: aan de overkant van het water flitst af en toe een lichtje. Dat is een <b>seinlamp</b>. Met zo'n lamp sturen soldaten 's avonds berichten in lichtsignalen, want een telefoondraad kan kapotgaan."</i></p>
       <p><i>"Dat lichtje verraadt waar er een Duitse uitkijkpost zit. Van daaruit zien ze alles wat hier beweegt, ook onze mortierploeg bij de grenssteen."</i></p>
       <p><i>"Kijk door de periscoop en zoek dat lichtje. Zet het in het kruisje: dan lees je onderaan de <b>richting in graden</b> af. Onze telefoon doet het niet, dus breng jij die richting naar de mortierploeg."</i></p>
-      <div class="hint">Een <b>periscoop</b> is een buis met twee spiegels. Zo kijk je over de borstwering zonder je hoofd boven de zandzakken te steken. De periscoop staat vlak naast de sergeant: kijk ernaar en druk op E.</div>`);
+      <div class="hint">Een <b>periscoop</b> is een buis met twee spiegels. Zo kijk je over de borstwering zonder je hoofd boven de zandzakken te steken. De periscoop staat vlak naast de sergeant: kijk ernaar en druk op Enter.</div>`);
   }
 
   _mark(ps) {
@@ -361,7 +361,7 @@ export class Mission {
   _objective() {
     const hud = this.g.hud, title = `Bereik ${LV.dest.name}: koers ${T1}°, dan ${T2}°.`;
     if (this.state === 'approach') hud.setObjective(`Dag 1: koers ${pad(PRELUDE.bearing)}\u00b0 naar Poste 7`, `Je hebt je kaart en kompas al. Zet de ring op ${pad(PRELUDE.bearing)} en houd de rode naald in de poort. De verbindingspost ligt ongeveer ${PRELUDE.dist} meter verder.`);
-    else if (this.state === 'evening') hud.setObjective('Overnachten in de post', 'Het wordt donker. Ga naar binnen en slaap op de brits (kijk ernaar en druk op E).');
+    else if (this.state === 'evening') hud.setObjective('Overnachten in de post', 'Het wordt donker. Ga naar binnen en slaap op de brits (kijk ernaar en druk op Enter).');
     else if (this.state === 'sleep') hud.setObjective('De nacht...', '');
     else if (this.state === 'gear') hud.setObjective(title, `Neem eerst de kaart en het kompas mee. Ze liggen op de tafel bij de ${LV.hutName.toLowerCase()}.`);
     else if (this.state === 'navigate' && this.leg === 0) hud.setObjective(`Stap 1 van 2: koers ${T1}° naar ${WP.name}`,
@@ -369,20 +369,20 @@ export class Mission {
     else if (this.state === 'navigate') hud.setObjective(`Stap 2 van 2: koers ${T2}° naar ${LV.dest.name}`, ENTRANCE
       ? `Zet bij het paaltje de ring van je kompas op ${T2}. Na ongeveer ${LV.entranceAt} meter kom je bij de ingang van de verbindingsloopgraaf: volg die tot in de eerste loopgraaf.`
       : `Zet bij het paaltje de ring van je kompas op ${T2} en houd de rode naald in de poort. Het is nog ongeveer ${LEGS[1].dist} meter.`);
-    else if (MW && this.state === 'observe') hud.setObjective('Zoek de Duitse mijnenwerper', 'Kijk door de periscoop naast de sergeant (E). Zoek in het niemandsland de stelling van de mijnenwerper, zet ze in het kruisje en noteer de richting.');
+    else if (MW && this.state === 'observe') hud.setObjective('Zoek de Duitse mijnenwerper', 'Kijk door de periscoop naast de sergeant (Enter). Zoek in het niemandsland de stelling van de mijnenwerper, zet ze in het kruisje en noteer de richting.');
     else if (MW && this.state === 'return' && this.leg === 2) hud.setObjective('Naar de westelijke uitgang', 'Volg de verbindingsloopgraaf terug tot de steunloopgraaf. Ga daar rechtsaf (west) tot het bordje SORTIE OUEST en loop de helling op naar buiten.');
     else if (MW && this.state === 'return' && this.leg === 3) hud.setObjective(`Stap 1 van 2: koers ${K1}\u00b0 naar ${WP2.name}`, `Zet bij de uitgang de ring van je kompas op ${K1} en houd de rode naald in de poort. Na ongeveer ${RECON.legs[0].dist} meter kom je bij ${WP2.what}.`);
     else if (MW && this.state === 'return') hud.setObjective(`Stap 2 van 2: koers ${K2}\u00b0 naar de mortierploeg`, `Zet bij het wegkruis de ring van je kompas op ${K2}. Het is nog ongeveer ${RECON.legs[1].dist} meter.`);
-    else if (MW && this.state === 'report') hud.setObjective('Meld de mijnenwerper aan de mortierploeg', `Praat met de sergeant naast de mortier (E). Op je kaart staat de mijnenwerper: ${pad(this.obs)}\u00b0, ${this.rng} meter. In welk kaartvak?`);
+    else if (MW && this.state === 'report') hud.setObjective('Meld de mijnenwerper aan de mortierploeg', `Praat met de sergeant naast de mortier (Enter). Op je kaart staat de mijnenwerper: ${pad(this.obs)}\u00b0, ${this.rng} meter. In welk kaartvak?`);
     else if (MW && this.state === 'firing') hud.setObjective('De mortierploeg vuurt', 'Kijk en luister naar het noorden, naar de top.');
-    else if (this.state === 'observe') hud.setObjective('Zoek de vijandelijke uitkijkpost', 'Kijk door de periscoop naast de sergeant (E). Zoek over het water een lichtje dat af en toe flitst, zet het in het kruisje en noteer de richting.');
+    else if (this.state === 'observe') hud.setObjective('Zoek de vijandelijke uitkijkpost', 'Kijk door de periscoop naast de sergeant (Enter). Zoek over het water een lichtje dat af en toe flitst, zet het in het kruisje en noteer de richting.');
     else if (this.state === 'return' && this.leg === 2) hud.setObjective(`Terug, stap 1 van 2: koers ${R1}\u00b0 naar ${WP.name}`,
       `Je kwam op ${T2}\u00b0, dus terug is ${backSum(LEGS[1].bearing)}. Volg eerst de verbindingsgang terug tot de ingang en zet daar je kompas op ${R1}.`);
     else if (this.state === 'return') hud.setObjective(`Terug, stap 2 van 2: koers ${R2}\u00b0 naar de grenssteen`,
       `Je vertrok op ${T1}\u00b0, dus terug is ${backSum(LEGS[0].bearing)}. Naast de grenssteen staat de mortierploeg.`);
-    else if (this.state === 'report') hud.setObjective('Meld het doel aan de mortierploeg', `Praat met de sergeant naast de mortier (E). Op je kaart staat de peillijn van ${pad(this.obs)}\u00b0: op welk gebouw komt ze uit?`);
+    else if (this.state === 'report') hud.setObjective('Meld het doel aan de mortierploeg', `Praat met de sergeant naast de mortier (Enter). Op je kaart staat de peillijn van ${pad(this.obs)}\u00b0: op welk gebouw komt ze uit?`);
     else if (this.state === 'firing') hud.setObjective('De mortierploeg vuurt', 'Kijk naar het oosten, over de spoorwegberm.');
-    else if (this.state === 'arrived') hud.setObjective(`Je hebt ${LV.dest.name} bereikt!`, LV.dest.kind === 'op' ? 'Geef je boodschap af aan de sergeant aan de periscoop: kijk naar hem en druk op E.' : LV.dest.repair ? 'Loop tot vlak bij de paal, kijk ernaar en druk op E om de lijn te herstellen.' : 'Loop tot vlak bij de paal, kijk ernaar en druk op E om hem te onderzoeken.');
+    else if (this.state === 'arrived') hud.setObjective(`Je hebt ${LV.dest.name} bereikt!`, LV.dest.kind === 'op' ? 'Geef je boodschap af aan de sergeant aan de periscoop: kijk naar hem en druk op Enter.' : LV.dest.repair ? 'Loop tot vlak bij de paal, kijk ernaar en druk op Enter om de lijn te herstellen.' : 'Loop tot vlak bij de paal, kijk ernaar en druk op Enter om hem te onderzoeken.');
     else if (this.state === 'repair') hud.setObjective('De lijn herstellen', 'Kies telkens wat een lijnwerker als volgende stap doet.');
     else if (this.state === 'done') hud.setObjective(`Level ${LEVEL} is voltooid.`, LEVEL < LEVEL_COUNT ? 'Kies "Volgend level" om verder te gaan, of verken nog wat rond.' : 'Je hebt alle levels uitgespeeld!');
   }
@@ -414,7 +414,7 @@ export class Mission {
     hud.read('Verbindingspost Poste 7', `<p>Je bent bij de post, net voor het donker. Op de deur hangt een briefje van de korporaal:</p>
       <div class="order"><i>"Lijnwerker, de lijn is kapot bij paal <b>N° 47</b>, de oude telegraafpaal aan de overkant van de beek. Slaap hier op de brits. Vertrek morgenvroeg bij de grenssteen: <b>${T1}\u00b0</b> naar Les Roches, daar <b>${T2}\u00b0</b>. In je tas: een tang, een rol draad, een reserve-isolator en een veldtelefoon."</i></div>
       <p>In het donker kun je de lijn niet herstellen. Binnen staat een <b>brits</b>: een houten bed voor wie hier de nacht doorbrengt.</p>
-      <div class="hint">Ga naar binnen, kijk naar de brits en druk op E om te slapen.</div>`);
+      <div class="hint">Ga naar binnen, kijk naar de brits en druk op Enter om te slapen.</div>`);
   }
 
   /** De nacht: het scherm wordt zwart, en je wordt wakker in een dikke ochtendmist. */
@@ -512,7 +512,7 @@ export class Mission {
   _giveTip() {
     const hud = this.g.hud;
     if (this.state === 'approach') { hud.setTip(`Tip: zet de ring van je kompas op ${pad(PRELUDE.bearing)} en draai jezelf tot de rode naald in de rode poort staat. Kies een boom recht voor je en loop ernaartoe. De post is een houten hut met een veranda.`); return; }
-    if (this.state === 'evening') { hud.setTip('Tip: ga de post binnen door de deur op de veranda. De brits staat tegen de achterwand. Kijk ernaar en druk op E.'); return; }
+    if (this.state === 'evening') { hud.setTip('Tip: ga de post binnen door de deur op de veranda. De brits staat tegen de achterwand. Kijk ernaar en druk op Enter.'); return; }
     if (MW && ['observe', 'return', 'report'].includes(this.state)) {
       if (this.state === 'return') this.rtip = Math.max(this.rtip, this.leg === 2 ? 3 : 4);
       if (this.state === 'report') this.rtip = Math.max(this.rtip, 2);

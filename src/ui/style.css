@@ -246,3 +246,25 @@ body.stargaze #bottombar, body.stargaze #vignette { display: none; }
 #periscope .scope-help { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #e8dfc4; font-size: 16px; text-shadow: 0 1px 3px #000; }
 #periscope .scope-help .btns { display: flex; gap: 10px; pointer-events: auto; }
 body.scoping #bottombar, body.scoping #prompt, body.scoping #compass-panel, body.scoping #compass-steps, body.scoping #mousehint, body.scoping #vignette { display: none !important; }
+
+/* kompas voor je gehouden: groot in het midden, de muis draait de ring */
+#compass-hint { font-size: 13.5px; color: #e6d6ae; text-align: center; padding: 4px 10px; background: var(--panel); border: 1px solid rgba(201,168,100,0.4); border-radius: 8px; }
+#compass-hint .up { display: none; }
+#compass-panel.raised #compass-hint .low { display: none; }
+#compass-panel.raised #compass-hint .up { display: inline; }
+#compass-panel.raised { right: 50%; bottom: auto; top: 104px; transform: translateX(50%); width: min(64vw, calc((100vh - 250px) * 0.85), 600px); animation: lift 0.3s ease both; }
+#compass-panel.raised #compass-controls button, #compass-panel.raised .close-x { display: none; }
+#compass-panel.raised #compass-hint { font-size: 15px; padding: 5px 12px; width: max-content; max-width: min(560px, 92vw); }
+@keyframes lift { from { opacity: 0.4; transform: translate(50%, 12%) scale(0.75); } to { opacity: 1; transform: translateX(50%); } }
+body.compass-up #prompt, body.compass-up #mousehint, body.compass-up #bottombar { display: none !important; }
+body.compass-up #vignette { background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 30%, rgba(14,9,4,0.55) 100%); }
+
+/* menu (Esc) */
+.paper.pause { width: min(440px, 92vw); }
+.menu-list { display: flex; flex-direction: column; gap: 10px; align-items: stretch; margin-top: 8px; }
+.menu-list .pill { margin-top: 0; font-size: 18px; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 18px; text-align: left; }
+.set-row input[type=range] { flex: 1; accent-color: #8e6a26; }
+.set-row b { min-width: 2.4em; font: 600 16px ui-sans-serif, system-ui, sans-serif; }
+#tools kbd { font-size: 11px; }
+#help { z-index: 11; }

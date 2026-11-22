@@ -7,7 +7,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 export class Hud {
   constructor(events) {
     this.events = events;
-    this.readerOpen = false; this.helpOpen = false; this.endOpen = false;
+    this.readerOpen = false; this.helpOpen = false; this.endOpen = false; this.pauseOpen = false;
     this._toastTimer = null; this._readerDone = null;
 
     $('btn-map').addEventListener('click', () => events.emit('action', { name: 'map' }));
@@ -15,14 +15,22 @@ export class Hud {
     $('btn-interact').addEventListener('click', () => events.emit('action', { name: 'interact' }));
     $('help-tip-btn').addEventListener('click', () => events.emit('ui:tip'));
     $('help-back').addEventListener('click', () => events.emit('ui:legback'));
-    $('help-restart').addEventListener('click', () => location.reload());
+    $('help-restart').addEventListener('click', () => this.restart());
+    $('btn-menu').addEventListener('click', () => events.emit('ui:menu'));
+    $('menu-resume').addEventListener('click', () => events.emit('ui:resume'));
+    $('menu-help').addEventListener('click', () => events.emit('action', { name: 'help' }));
+    $('menu-settings').addEventListener('click', () => this._menuPage('set'));
+    $('menu-back').addEventListener('click', () => this._menuPage('main'));
+    $('menu-restart').addEventListener('click', () => this.restart());
+    $('menu-levels').addEventListener('click', () => location.reload());
+    $('set-sens').addEventListener('input', (e) => { const v = Number(e.target.value); this.setSensLabel(v); events.emit('ui:sens', v); });
     $('btn-help').addEventListener('click', () => events.emit('action', { name: 'help' }));
     $('btn-mute').addEventListener('click', () => events.emit('ui:mute'));
     $('btn-quality').addEventListener('click', () => events.emit('ui:quality'));
     $('reader-close').addEventListener('click', () => this.closeReader());
     $('help-close').addEventListener('click', () => this.setHelp(false));
     $('end-continue').addEventListener('click', () => this.setEnd(false));
-    $('end-restart').addEventListener('click', () => location.reload());
+    $('end-restart').addEventListener('click', () => this.restart());
     $('end-next').addEventListener('click', () => { if (this._next) location.search = '?level=' + this._next; });
     for (const b of document.querySelectorAll('button')) b.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') e.preventDefault(); });
     for (const b of document.querySelectorAll('button')) b.addEventListener('click', () => b.blur());
@@ -47,7 +55,12 @@ export class Hud {
     this.progress(1, 'Klaar. Zet je geluid aan voor de sfeer.');
     const btn = $('start-btn'); btn.disabled = false; btn.focus();
     btn.addEventListener('click', () => onStart($('quality-select').value), { once: true });
+    // "Level herstarten": meteen opnieuw beginnen, zonder startscherm
+    let again = false; try { again = sessionStorage.getItem('koerier.herstart') === '1'; sessionStorage.removeItem('koerier.herstart'); } catch { /* geen opslag */ }
+    if (again) btn.click();
   }
+  /** Het level opnieuw laden en meteen starten. */
+  restart() { try { sessionStorage.setItem('koerier.herstart', '1'); } catch { /* geen opslag */ } location.reload(); }
   setQualityChoice(q) { $('quality-select').value = q; }
   hideStart() { $('start-screen').classList.add('leaving'); setTimeout(() => $('start-screen').classList.add('hidden'), 1500); }
   showGameUi() { for (const id of ['tools', 'bottombar', 'mousehint']) $(id).classList.remove('hidden'); }
@@ -125,6 +138,13 @@ export class Hud {
     });
   }
   setHelp(open) { this.helpOpen = open; $('help').classList.toggle('hidden', !open); }
+  /** Het menu (Esc): hervatten, hulp, instellingen, herstarten, ander level. */
+  setPause(open) {
+    this.pauseOpen = open; $('pause').classList.toggle('hidden', !open);
+    if (open) { this._menuPage('main'); $('menu-resume').focus(); }
+  }
+  _menuPage(p) { $('menu-main').classList.toggle('hidden', p !== 'main'); $('menu-set').classList.toggle('hidden', p !== 'set'); }
+  setSensLabel(v) { $('set-sens').value = v; $('set-sens-val').textContent = v.toFixed(1).replace('.', ','); }
   setEnd(open, text, title, stamp, next) {
     this.endOpen = open; if (text) $('end-text').textContent = text; if (title) $('end-title').textContent = title; if (stamp) $('end-stamp').textContent = stamp;
     if (next !== undefined) { this._next = next; $('end-next').classList.toggle('hidden', !next); } $('end-screen').classList.toggle('hidden', !open); }
@@ -136,5 +156,5 @@ export class Hud {
     $('btn-map').classList.toggle('active', mapOpen); $('btn-compass').classList.toggle('active', compassOpen);
   }
   fade(on) { $('fade').classList.toggle('on', on); }
-  get modalOpen() { return this.readerOpen || this.helpOpen || this.endOpen; }
+  get modalOpen() { return this.readerOpen || this.helpOpen || this.endOpen || this.pauseOpen; }
 }

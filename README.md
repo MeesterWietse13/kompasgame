@@ -34,13 +34,14 @@ De leerlingen openen dan gewoon de link. Alles wat het spel nodig heeft zit in d
 |---|---|
 | W / S (ook Z, pijltjes ↑ ↓) | vooruit / achteruit |
 | A / D (ook Q, pijltjes ← →) | naar links / rechts draaien |
-| Shift | sneller stappen |
-| Slepen met touchpad of muis, of schuiven met twee vingers | vrij rondkijken |
-| E | onderzoeken of gebruiken |
+| Spatie (ingedrukt) | sneller stappen |
+| Klik in het beeld, dan de muis bewegen (of slepen) | vrij rondkijken |
+| Enter | onderzoeken of gebruiken, venster sluiten |
+| Shift | 1×: kompas nemen (rechtsonder) · 2×: kompas voor je houden, de muis draait de ring · 3×: laten zakken |
+| C | kompas wegsteken |
 | M | kaart open/dicht |
-| C | kompas open/dicht |
-| + / − (Shift = per 10°) | kompasring draaien |
-| Esc | venster sluiten |
+| + / − | kompasring 1° draaien |
+| Esc | menu: hervatten, hulp, instellingen, level herstarten, ander level |
 
 De besturing kijkt naar de letter op de toets en werkt dus op AZERTY én QWERTY.
 

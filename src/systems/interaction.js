@@ -1,5 +1,5 @@
 // Interacties: elk object dat je kunt onderzoeken of gebruiken meldt zich hier aan.
-// Een zacht lichtpuntje toont waar iets te doen is; dichtbij verschijnt "[E] ...".
+// Een zacht lichtpuntje toont waar iets te doen is; dichtbij verschijnt "[Enter] ...".
 import * as THREE from 'three';
 
 export class Interaction {

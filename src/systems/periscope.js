@@ -45,7 +45,7 @@ export class Periscope {
     player.apply();
   }
 
-  /** E of spatie: de richting noteren van wat in het kruisje staat. */
+  /** Enter: de richting noteren van wat in het kruisje staat. */
   mark() {
     if (!this.active || !this.onMark) return;
     this.onMark(this);
