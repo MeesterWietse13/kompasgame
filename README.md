@@ -34,7 +34,7 @@ De leerlingen openen dan gewoon de link. Alles wat het spel nodig heeft zit in d
 |---|---|
 | W / S (ook Z, pijltjes ↑ ↓) | vooruit / achteruit |
 | A / D (ook Q, pijltjes ← →) | naar links / rechts draaien |
-| Spatie (ingedrukt) | sneller stappen |
+| Spatie | volledig scherm aan/uit (ook in het menu) |
 | Klik in het beeld, dan de muis bewegen (of slepen) | vrij rondkijken |
 | Enter | onderzoeken of gebruiken, venster sluiten |
 | Shift | 1×: kompas nemen (rechtsonder) · 2×: kompas voor je houden, de ring draai je met de knopjes −10 / −1 / +1 / +10 · 3×: laten zakken |

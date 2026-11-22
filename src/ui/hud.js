@@ -22,6 +22,7 @@ export class Hud {
     $('menu-settings').addEventListener('click', () => this._menuPage('set'));
     $('menu-back').addEventListener('click', () => this._menuPage('main'));
     $('menu-restart').addEventListener('click', () => this.restart());
+    $('menu-fullscreen').addEventListener('click', () => events.emit('ui:fullscreen'));
     $('menu-levels').addEventListener('click', () => location.reload());
     $('set-sens').addEventListener('input', (e) => { const v = Number(e.target.value); this.setSensLabel(v); events.emit('ui:sens', v); });
     $('btn-help').addEventListener('click', () => events.emit('action', { name: 'help' }));
@@ -149,6 +150,7 @@ export class Hud {
     this.endOpen = open; if (text) $('end-text').textContent = text; if (title) $('end-title').textContent = title; if (stamp) $('end-stamp').textContent = stamp;
     if (next !== undefined) { this._next = next; $('end-next').classList.toggle('hidden', !next); } $('end-screen').classList.toggle('hidden', !open); }
 
+  setFullscreenLabel(on) { $('menu-fullscreen').innerHTML = (on ? 'Volledig scherm uit' : 'Volledig scherm') + ' <kbd>Spatie</kbd>'; }
   setMuteLabel(muted) { $('btn-mute').textContent = muted ? 'Geluid: uit' : 'Geluid: aan'; }
   setQualityLabel(q) { $('btn-quality').textContent = q === 'high' ? 'Beeld: hoog' : 'Beeld: laag'; }
   setToolState(hasMap, hasCompass, mapOpen, compassOpen) {

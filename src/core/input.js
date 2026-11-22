@@ -1,12 +1,12 @@
 // Toetsenbord, slepen (touchpad/muis/aanraking) en scrollen.
 // Werkt met de letter op de toets, dus zowel op QWERTY (WASD) als op AZERTY (ZQSD of W/A).
-// Alles wat je vaak nodig hebt, ligt dicht bij de pijltjes: Shift = kompas, Enter = gebruiken, spatie = sneller stappen.
+// Alles wat je vaak nodig hebt, ligt dicht bij de pijltjes: Shift = kompas, Enter = gebruiken, Backspace = kaart, spatie = volledig scherm.
 
 const FORWARD = new Set(['w', 'z', 'arrowup']);
 const BACK = new Set(['s', 'arrowdown']);
 const LEFT = new Set(['a', 'q', 'arrowleft']);
 const RIGHT = new Set(['d', 'arrowright']);
-const ACTIONS = { enter: 'interact', backspace: 'map', c: 'compass', escape: 'escape', h: 'help', '?': 'help', '+': 'ringPlus', '=': 'ringPlus', '-': 'ringMinus', '_': 'ringMinus' };
+const ACTIONS = { enter: 'interact', backspace: 'map', ' ': 'fullscreen', c: 'compass', escape: 'escape', h: 'help', '?': 'help', '+': 'ringPlus', '=': 'ringPlus', '-': 'ringMinus', '_': 'ringMinus' };
 
 function loadSens() { try { const v = Number(localStorage.getItem('koerier.muis')); if (v >= 0.3 && v <= 2.5) return v; } catch { /* geen opslag */ } return 1; }
 
@@ -96,7 +96,7 @@ export class Input {
   any(set) { for (const k of set) if (this.keys.has(k)) return true; return false; }
   get forward() { return (this.any(FORWARD) ? 1 : 0) - (this.any(BACK) ? 1 : 0); }
   get turn() { return (this.any(RIGHT) ? 1 : 0) - (this.any(LEFT) ? 1 : 0); }
-  get sprint() { return this.keys.has(' '); }
+  get sprint() { return false; }
   consumeTap() { const t = this.turnTap; this.turnTap = 0; return t; }
   consumeLook() { const d = { x: this.lookDX, y: this.lookDY }; this.lookDX = 0; this.lookDY = 0; return d; }
   consumeRing() { const d = this.ringDX; this.ringDX = 0; return d; }

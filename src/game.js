@@ -154,6 +154,18 @@ export class Game {
     if (open) { this.audio.ui('map'); this._selfUnlock(); }
     else if (!this.hud.modalOpen && !this.mapView.open) this.input.lock();
   }
+  /** Spatie of de knop in het menu: volledig scherm aan of uit. */
+  toggleFullscreen() {
+    const el = document.documentElement;
+    try {
+      if (document.fullscreenElement) { const p = document.exitFullscreen(); if (p && p.catch) p.catch(() => {}); }
+      else if (el.requestFullscreen) {
+        const p = el.requestFullscreen({ navigationUI: 'hide' });
+        // na het wisselen de muis opnieuw vastzetten (tenzij er een venster of het menu open is)
+        if (p && p.then) p.then(() => { if (!this.hud.modalOpen && !this.mapView.open && !this.compass.raised) this.input.lock(); }).catch(() => {});
+      }
+    } catch { /* niet toegelaten */ }
+  }
   _selfUnlock() { if (document.pointerLockElement) { this._unlockBySelf = true; document.exitPointerLock(); } }
   _refreshTools() { this.hud.setToolState(this.inventory.has('map'), this.inventory.has('compass'), this.mapView.open, this.compass.open); }
 
@@ -171,6 +183,8 @@ export class Game {
     events.on('ui:menu', () => { if (this.running) this.setPause(!hud.pauseOpen); });
     events.on('ui:resume', () => this.setPause(false));
     events.on('ui:sens', (v) => this.input.setSens(v));
+    events.on('ui:fullscreen', () => this.toggleFullscreen());
+    document.addEventListener('fullscreenchange', () => hud.setFullscreenLabel(!!document.fullscreenElement));
     events.on('action', ({ name }) => {
       if (!this.running) return;
       if (name === 'escape') {
@@ -184,6 +198,7 @@ export class Game {
         this.setPause(true);
         return;
       }
+      if (name === 'fullscreen') { this.toggleFullscreen(); return; }
       if (hud.pauseOpen) { if (name === 'help') hud.setHelp(!hud.helpOpen); return; }
       // naast een keuzevenster aan de zijkant mag de kaart open, zodat je ze kunt raadplegen
       if (hud.readerOpen && name === 'map' && this.inventory.has('map') && document.getElementById('reader').classList.contains('side')) { this.setMap(!this.mapView.open); return; }
