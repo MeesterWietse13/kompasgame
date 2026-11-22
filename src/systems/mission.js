@@ -336,10 +336,19 @@ export class Mission {
     await wait(5200);
     const y = Math.max(world.terrain.heightFn(tg.x, tg.z), FLOOD ? FLOOD.level : -99) + 0.6;
     front.explode({ x: tg.x, y, z: tg.z }, true);
+    audio.farBoom(Math.hypot(tg.x - player.x, tg.z - player.z) / 340, 1);   // de inslag: een doffe knal in de verte
+    player.shake = Math.max(player.shake || 0, 0.18);
     if (A.lamp) A.lamp.userData.on = false;
+    hud.toast('Boem! Ver weg hoor je de inslag. Kijk naar de observatiepost: komt er een teken?', 4000);
+    await wait(2600);
+    // de speler kijkt vanzelf naar de observatiepost in de voorste loopgraaf, een beetje omhoog
+    { const want = -vecToBearing(TELEGRAPH.x - player.x, TELEGRAPH.z - player.z) * DEG, d = Math.atan2(Math.sin(want - player.tYaw), Math.cos(want - player.tYaw)); player.tYaw += d; player.tPitch = 0.3; }
+    await wait(700);
+    front.flare(new THREE_V(TELEGRAPH.x, world.terrain.heightFn(TELEGRAPH.x, TELEGRAPH.z) + 3, TELEGRAPH.z), 0x7dff8a);
+    hud.toast('Boven de voorste loopgraaf stijgt een groene lichtkogel op: het afgesproken teken van de observatiepost. Raak!', 7000);
     await wait(6500);
     audio.ui('success');
-    hud.read('Voltreffer!', `<p>Boven de overkant licht een vuurflits op, en daarna stijgt een rookwolk op. De seinlamp flitst niet meer: de Duitse uitkijkpost op ${tg.name} is buiten gebruik.</p>
+    hud.read('Voltreffer!', `<p>Ver weg hoorde je een doffe knal. Daarna stijgt boven de voorste loopgraaf een <b>groene lichtkogel</b> op: zo laat de observatiepost weten dat het raak is. De seinlamp flitst niet meer: de Duitse uitkijkpost op ${tg.name} is buiten gebruik.</p>
       <p><i>"Dankzij jou, koerier!"</i></p>
       <p>Zo ging het echt aan het front. Een <b>waarnemer</b> in de voorste lijn zocht het doel met een periscoop of een verrekijker en bepaalde de richting. Werkte de telefoon niet, dan bracht een <b>koerier</b> de melding te voet naar de mortieren of kanonnen achter de linie.</p>
       <p>Jij liep heen op ${T1}\u00b0 en ${T2}\u00b0, vond het doel op ${pad(this.obs)}\u00b0, en liep terug op ${R1}\u00b0 en ${R2}\u00b0.</p>`, async () => {

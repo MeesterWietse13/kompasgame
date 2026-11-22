@@ -162,8 +162,8 @@ export function createFrontLife(game) {
   const flareMat = () => new THREE.SpriteMaterial({ map: flareTex, color: 0x7dff8a, transparent: true, depthWrite: false, depthTest: false, fog: false, toneMapped: false, opacity: 0 });
   const flareSp = new THREE.Sprite(flareMat()), flareHalo = new THREE.Sprite(flareMat());
   flareSp.visible = flareHalo.visible = false; flareSp.renderOrder = 31; flareHalo.renderOrder = 30; group.add(flareSp, flareHalo);
-  // groen licht over de sneeuw (alleen in level 3: een extra lamp kost wat rekenwerk)
-  const flareLight = RECON && RECON.mw ? new THREE.PointLight(0x7dff8a, 0, 120, 1.2) : { position: new THREE.Vector3(), color: new THREE.Color(), intensity: 0 };
+  // groen licht over het land (alleen in level 2 en 3, waar een lichtkogel opgaat: een extra lamp kost wat rekenwerk)
+  const flareLight = RECON ? new THREE.PointLight(0x7dff8a, 0, 120, 1.2) : { position: new THREE.Vector3(), color: new THREE.Color(), intensity: 0 };
   if (flareLight.isLight) scene.add(flareLight);
   const trail = pool(12, 0xd8e6d8);
   let flareT = -1; const flareFrom = new THREE.Vector3();
