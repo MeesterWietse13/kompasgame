@@ -283,7 +283,8 @@ export function createStructures({ M, T, terrain, colliders, splat, trenchInfo =
   {
     const g = new THREE.Group(), kit = new Kit(31);
     kit.box(M.stone, 0.34, 0.66, 0.26, 0, 0.27, 0, { tint: [1.55, 1.52, 1.44], uv: 0.8 });
-    kit.cyl(M.stone, 0.17, 0.17, 0.26, 14, 0, 0.6, 0, { rx: P2, tint: [1.5, 0.22, 0.17], uv: 0.8 });
+    // ronde kop: iets smaller en dunner dan de steen, anders vallen de vlakken samen en flikkert de bovenkant
+    kit.cyl(M.stone, 0.166, 0.166, 0.248, 16, 0, 0.6, 0, { rx: P2, tint: [1.5, 0.22, 0.17], uv: 0.8 });
     kit.build(g);
     const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.27, 0.2), texturedMaterial(signTexture(LV.startSign, { w: 256, h: 190, size: 62, bg: '#ebe6d6' })));
     plate.position.set(0, 0.36, 0.133); g.add(plate);
@@ -634,7 +635,7 @@ export function createStructures({ M, T, terrain, colliders, splat, trenchInfo =
     compass: A(d.tx + 0.42, d.tz + 0.1, d.tTop + 0.08),
     phone: A(-1.35, -hd + 0.25, 1.3),
     bunk: A(1.15, -hd + 0.5, 0.7),
-    marker: new THREE.Vector3(START.x, H(START.x, START.z) + 0.75, START.z),
+    marker: new THREE.Vector3(START.x, H(START.x, START.z) + 1.0, START.z),   // lichtpuntje boven de kop, niet erin (anders flikkert het)
     signpost: SIGNPOST ? new THREE.Vector3(SIGNPOST.x, H(SIGNPOST.x, SIGNPOST.z) + 1.9, SIGNPOST.z) : null,
     waypoint: wpPost,
     fallenPole: FALLEN_POLE ? new THREE.Vector3(FALLEN_POLE.x, H(FALLEN_POLE.x, FALLEN_POLE.z) + 0.6, FALLEN_POLE.z) : null,
