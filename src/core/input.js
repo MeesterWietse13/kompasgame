@@ -6,7 +6,7 @@ const FORWARD = new Set(['w', 'z', 'arrowup']);
 const BACK = new Set(['s', 'arrowdown']);
 const LEFT = new Set(['a', 'q', 'arrowleft']);
 const RIGHT = new Set(['d', 'arrowright']);
-const ACTIONS = { enter: 'interact', m: 'map', c: 'compass', escape: 'escape', h: 'help', '?': 'help', '+': 'ringPlus', '=': 'ringPlus', '-': 'ringMinus', '_': 'ringMinus' };
+const ACTIONS = { enter: 'interact', backspace: 'map', c: 'compass', escape: 'escape', h: 'help', '?': 'help', '+': 'ringPlus', '=': 'ringPlus', '-': 'ringMinus', '_': 'ringMinus' };
 
 function loadSens() { try { const v = Number(localStorage.getItem('koerier.muis')); if (v >= 0.3 && v <= 2.5) return v; } catch { /* geen opslag */ } return 1; }
 
@@ -16,7 +16,7 @@ export class Input {
     this.lookDX = 0; this.lookDY = 0; this.turnTap = 0; this.ringDX = 0;
     this.events = events;
     this.enabled = false;
-    this.ringMode = false;     // kompas voor je gehouden: de muis draait de ring in plaats van je hoofd
+    this.ringMode = false;     // kompas voor je gehouden: de muis is vrij voor de knopjes, je kijkt niet rond
     this.sens = loadSens();
     this.viewEl = viewEl;
 
@@ -29,7 +29,7 @@ export class Input {
       shiftClean = false;
       if (k === 'escape') { if (!e.repeat) events.emit('action', { name: 'escape' }); return; }
       if (!this.enabled) return;
-      if (k === 'enter') e.preventDefault();
+      if (k === 'enter' || k === 'backspace') e.preventDefault();
       this.keys.add(k);
       // elk tikje op een draaitoets geeft meteen een klein stapje: handig om het kompas nauwkeurig te richten
       if (!e.repeat) { if (LEFT.has(k)) this.turnTap -= 1; else if (RIGHT.has(k)) this.turnTap += 1; }
@@ -55,7 +55,7 @@ export class Input {
       const s = e.pointerType === 'touch' ? -1 : 1; // aanraken = de wereld "vastpakken"
       const dx = (e.clientX - lastX) * s, dy = (e.clientY - lastY) * s;
       lastX = e.clientX; lastY = e.clientY;
-      if (this.ringMode) this.ringDX += dx; else { this.lookDX += dx * this.sens; this.lookDY += dy * this.sens; }
+      if (!this.ringMode) { this.lookDX += dx * this.sens; this.lookDY += dy * this.sens; }
     });
     const end = (e) => { dragging = false; viewEl.classList.remove('dragging'); try { viewEl.releasePointerCapture(e.pointerId); } catch { /* al losgelaten */ } };
     viewEl.addEventListener('pointerup', end);
@@ -74,7 +74,7 @@ export class Input {
     // Muiskijken zoals in een shooter: klik in het beeld, daarna volgt het beeld je muis (of touchpad).
     // Esc geeft de muisaanwijzer vrij en opent het menu. Slepen blijft werken als de browser dit niet toelaat.
     this.locked = false;
-    viewEl.addEventListener('click', () => { if (this.enabled) this.lock(); });
+    viewEl.addEventListener('click', () => { if (this.enabled && !this.ringMode) this.lock(); });
     document.addEventListener('pointerlockchange', () => {
       this.locked = document.pointerLockElement === viewEl;
       document.body.classList.toggle('mouselook', this.locked);
@@ -82,7 +82,7 @@ export class Input {
     });
     document.addEventListener('mousemove', (e) => {
       if (!this.enabled) return;
-      if (this.ringMode) { if (this.locked || e.buttons === 0) this.ringDX += e.movementX; return; }
+      if (this.ringMode) return;
       if (this.locked) { this.lookDX += e.movementX * 0.62 * this.sens; this.lookDY += e.movementY * 0.62 * this.sens; }
     });
   }

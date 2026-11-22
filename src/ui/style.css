@@ -253,7 +253,10 @@ body.scoping #bottombar, body.scoping #prompt, body.scoping #compass-panel, body
 #compass-panel.raised #compass-hint .low { display: none; }
 #compass-panel.raised #compass-hint .up { display: inline; }
 #compass-panel.raised { right: 50%; bottom: auto; top: 104px; transform: translateX(50%); width: min(64vw, calc((100vh - 250px) * 0.85), 600px); animation: lift 0.3s ease both; }
-#compass-panel.raised #compass-controls button, #compass-panel.raised .close-x { display: none; }
+#compass-panel.raised .close-x { display: none; }
+#compass-panel.raised #compass-controls button { min-width: 70px; font-size: 24px; padding: 10px 10px; }
+#compass-panel.raised #compass-controls button.big { min-width: 80px; font-size: 28px; }
+body.compass-up #view { cursor: default; }
 #compass-panel.raised #compass-hint { font-size: 15px; padding: 5px 12px; width: max-content; max-width: min(560px, 92vw); }
 @keyframes lift { from { opacity: 0.4; transform: translate(50%, 12%) scale(0.75); } to { opacity: 1; transform: translateX(50%); } }
 body.compass-up #prompt, body.compass-up #mousehint, body.compass-up #bottombar { display: none !important; }

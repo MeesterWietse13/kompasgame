@@ -37,9 +37,9 @@ De leerlingen openen dan gewoon de link. Alles wat het spel nodig heeft zit in d
 | Spatie (ingedrukt) | sneller stappen |
 | Klik in het beeld, dan de muis bewegen (of slepen) | vrij rondkijken |
 | Enter | onderzoeken of gebruiken, venster sluiten |
-| Shift | 1×: kompas nemen (rechtsonder) · 2×: kompas voor je houden, de muis draait de ring · 3×: laten zakken |
+| Shift | 1×: kompas nemen (rechtsonder) · 2×: kompas voor je houden, de ring draai je met de knopjes −10 / −1 / +1 / +10 · 3×: laten zakken |
 | C | kompas wegsteken |
-| M | kaart open/dicht |
+| Backspace | kaart open/dicht |
 | + / − | kompasring 1° draaien |
 | Esc | menu: hervatten, hulp, instellingen, level herstarten, ander level |
 

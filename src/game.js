@@ -112,6 +112,13 @@ export class Game {
     this.player.spawn(SPAWN.x, SPAWN.z, SPAWN.bearing);
     this.hud.hideStart(); this.hud.showGameUi();
     this.running = true; this.input.enabled = true;
+    this.input.lock();   // meteen rondkijken met de muis, zonder eerst in het beeld te klikken
+    // gaf de browser de muis nog niet vast (bv. na herstarten)? Dan bij de eerste toets
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Shift' || !this.running || this.input.locked || this.hud.modalOpen || this.mapView.open || this.compass.raised) return;
+      if (performance.now() - (this._escAt || 0) < 1500) return;
+      this.input.lock();
+    });
     this.hud.setSensLabel(this.input.sens);
     // na "Level herstarten" start het spel zonder klik: het geluid wordt wakker bij de eerste toets of klik
     const wake = () => { const c = this.audio.ctx; if (c && c.state === 'suspended') c.resume(); };
@@ -136,7 +143,8 @@ export class Game {
     if (this.mapView.open) this.setMap(false);
     if (!this.compass.open) { this.setCompass(true); return; }
     this.compass.setRaised(!this.compass.raised); this.audio.ui('compass');
-    if (this.compass.raised) this.input.lock();
+    // voor je gehouden: de muis wordt vrij om op de knopjes te klikken; laten zakken = weer rondkijken
+    if (this.compass.raised) this._selfUnlock(); else this.input.lock();
   }
 
   // --- menu (Esc) ---
@@ -189,7 +197,9 @@ export class Game {
       if (hud.helpOpen || hud.endOpen) return;
       if (name === 'map') {
         if (!this.inventory.has('map')) { this.audio.ui('deny'); hud.toast(`Je hebt nog geen kaart. Ze ligt op de tafel bij de ${LV.hutName.toLowerCase()}.`); return; }
-        this.setMap(!this.mapView.open);
+        if (this.compass.raised) this.compass.setRaised(false);
+        const open = !this.mapView.open; this.setMap(open);
+        if (!open) this.input.lock();
       } else if (name === 'compass') {
         if (!this.inventory.has('compass')) { this.audio.ui('deny'); hud.toast(`Je hebt nog geen kompas. Het ligt op de tafel bij de ${LV.hutName.toLowerCase()}.`); return; }
         if (this.mapView.open) this.setMap(false);
@@ -222,8 +232,8 @@ export class Game {
       const ringMode = this.compass.raised && !blocked && !scoping;
       this.input.ringMode = ringMode;
       if (ringMode) {
-        const d = this.input.consumeRing();
-        if (d && this.compass.turn(d * 0.16 * this.input.sens)) { const t = performance.now(); if (t - (this._tickAt || 0) > 45) { this._tickAt = t; this.audio.ui('tick'); } }
+        const d = this.input.consumeRing();   // scrollwiel
+        if (d && this.compass.turn(d * 0.16)) { const t = performance.now(); if (t - (this._tickAt || 0) > 45) { this._tickAt = t; this.audio.ui('tick'); } }
       } else this.input.consumeRing();
       if (scoping) this.periscope.update(dt, this.input, !blocked);
       else this.player.update(dt, this.input, !blocked);
