@@ -271,3 +271,4 @@ body.compass-up #vignette { background: radial-gradient(ellipse at 50% 50%, rgba
 .set-row b { min-width: 2.4em; font: 600 16px ui-sans-serif, system-ui, sans-serif; }
 #tools kbd { font-size: 11px; }
 #help { z-index: 11; }
+#compass-readout #ring-wind { font-size: 12px; letter-spacing: 0.02em; color: #e6d6ae; white-space: nowrap; }

@@ -5,6 +5,7 @@
 //   - de PIJL bovenaan de behuizing is je kijk- en looprichting.
 // Staat de naald in de poort, dan kijk je precies in de richting die op de ring is ingesteld.
 import { DEG, wrapDeg, angleDiffDeg } from '../core/math.js';
+import { windKort, windLang, windHaak } from '../world/layout.js';
 
 const W = 640, H = 730, CX = 320, CY = 338;
 const R_BODY = 284, R_BEZEL_OUT = 254, R_BEZEL_IN = 196, R_DIAL = 192;
@@ -89,6 +90,12 @@ function drawDial() {
   ctx.fillStyle = 'rgba(52,38,22,0.85)'; ctx.font = `600 30px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('O', 150, 2); ctx.fillText('Z', 0, 152); ctx.fillText('W', -150, 2);
   ctx.fillStyle = '#a3291c'; ctx.font = `700 26px ${SERIF}`; ctx.fillText('N', 0, -170);
+  // de tussenwindrichtingen: kleiner en wat lichter, zodat ze de rode poort niet storen
+  ctx.fillStyle = 'rgba(52,38,22,0.62)'; ctx.font = `600 19px ${SERIF}`;
+  for (const [t, deg] of [['NO', 45], ['ZO', 135], ['ZW', 225], ['NW', 315]]) {
+    const a = deg * DEG, r = 138;
+    ctx.save(); ctx.translate(Math.sin(a) * r, -Math.cos(a) * r); ctx.rotate(a); ctx.fillText(t, 0, 0); ctx.restore();
+  }
   // rode poort (wijst naar N op de ring)
   ctx.strokeStyle = '#b3271a'; ctx.lineWidth = 6; ctx.lineJoin = 'round';
   ctx.beginPath(); ctx.moveTo(-21, 30); ctx.lineTo(-21, -112); ctx.lineTo(-36, -112); ctx.lineTo(0, -152); ctx.lineTo(36, -112); ctx.lineTo(21, -112); ctx.lineTo(21, 30); ctx.stroke();
@@ -140,6 +147,7 @@ export class CompassView {
     this.ctx = this.canvas.getContext('2d');
     this.canvas.width = W; this.canvas.height = H;
     this.readout = document.getElementById('ring-value');
+    this.wind = document.getElementById('ring-wind');
     this.steps = [1, 2, 3].map((i) => document.getElementById('step-' + i));
     this.open = false;
     this.raised = false;      // voor je gehouden (groot in het midden): de muis draait de ring
@@ -206,7 +214,9 @@ export class CompassView {
     if (!r) { this.ring = wrapDeg(Math.round(this.ring)); this._ringChanged(true); }
   }
   _ringChanged(final) {
-    this.readout.textContent = String(Math.round(wrapDeg(this.ring)) % 360).padStart(3, '0') + '°';
+    const v = Math.round(wrapDeg(this.ring)) % 360;
+    this.readout.textContent = String(v).padStart(3, '0') + '°';
+    if (this.wind) this.wind.textContent = '\u2248 ' + windLang(v) + ' (' + windKort(v) + ')';
     this.events.emit('compass:ring', { value: Math.round(wrapDeg(this.ring)) % 360, final });
   }
 
@@ -221,7 +231,7 @@ export class CompassView {
     this.broken = b; this.stuck = 137;
     if (b) document.getElementById('compass-steps').innerHTML = '<li><span>Je kompas is <b class="red">beschadigd</b>: het glas is gebarsten en de naald hangt vast. Je kunt er niet meer op vertrouwen. Zoek een andere manier om het noorden te vinden.</span></li>';
   }
-  setTarget(deg) { this.target = deg; document.getElementById('step-course').textContent = String(deg).padStart(3, '0'); }
+  setTarget(deg) { this.target = deg; document.getElementById('step-course').textContent = String(deg).padStart(3, '0') + windHaak(deg); }
 
   /** heading = kompaskoers van de kijkrichting van de speler. */
   update(dt, heading, moving) {

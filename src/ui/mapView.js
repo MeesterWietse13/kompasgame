@@ -3,7 +3,7 @@
 import { RNG, DEG } from '../core/math.js';
 import {
   PATHS, STREAM, BRIDGE, HUT, START, TELEGRAPH, LINE_POLES, SIGNPOST, ROCKS, GLADE, LOGS, FALLEN_POLE, hutToWorld, LV, LEVEL, TRENCHES, WIRES, CRATERS, COURSE_DEG, COURSE_DIST, vecToBearing, ENTRANCE,
-  FLOOD, DITCHES, EMBANKMENT, RUINS, FOOTBRIDGES, LEGS, WAYPOINT, POND, GORGE, RECON, bearingToVec, PRELUDE,
+  FLOOD, DITCHES, EMBANKMENT, RUINS, FOOTBRIDGES, LEGS, WAYPOINT, POND, GORGE, RECON, bearingToVec, PRELUDE, windKort,
 } from '../world/layout.js';
 const POLDER = !!LV.polder;
 
@@ -332,7 +332,7 @@ export function drawMap(world, extra = {}) {
     ctx.translate(len * LV.mapLabelAt[k], 0); if (flip) ctx.rotate(Math.PI);
     ctx.font = `italic 700 32px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     ctx.lineWidth = 7; ctx.strokeStyle = 'rgba(236,224,188,0.92)';
-    const txt = `${k + 1}: koers ${String(L.bearing).padStart(3, '0')}°  ·  ${L.dist} m`;
+    const txt = `${k + 1}: koers ${String(L.bearing).padStart(3, '0')}° (${windKort(L.bearing)})  ·  ${L.dist} m`;
     ctx.strokeText(txt, 0, -12); ctx.fillText(txt, 0, -12);   // tekst staat rechtop, dus -y is altijd boven de lijn
     ctx.restore();
   });
@@ -356,7 +356,7 @@ export function drawMap(world, extra = {}) {
     const lp = { x: o.x + v.x * (extra.range ? extra.range * 0.5 : 18), z: o.z + v.z * (extra.range ? extra.range * 0.5 : 18) }, ang = Math.atan2(v.z, v.x);
     ctx.save(); ctx.translate(mx(lp.x), mz(lp.z)); ctx.rotate(ang);
     ctx.font = `italic 700 28px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.lineWidth = 7; ctx.strokeStyle = 'rgba(236,224,188,0.92)'; ctx.fillStyle = '#a3291c';
-    const txt = extra.range ? `mijnenwerper ${String(extra.peiling).padStart(3, '0')}\u00b0 \u00b7 ${extra.range} m` : `seinlamp ${String(extra.peiling).padStart(3, '0')}\u00b0`;
+    const txt = extra.range ? `mijnenwerper ${String(extra.peiling).padStart(3, '0')}\u00b0 (${windKort(extra.peiling)}) \u00b7 ${extra.range} m` : `seinlamp ${String(extra.peiling).padStart(3, '0')}\u00b0 (${windKort(extra.peiling)})`;
     ctx.strokeText(txt, 0, -10); ctx.fillText(txt, 0, -10); ctx.restore();
   }
   // level 3: de westelijke uitgang en het wegkruis (altijd op de kaart), en de weg naar de mortieren (na de periscoop)
@@ -380,7 +380,7 @@ export function drawMap(world, extra = {}) {
       ctx.fillStyle = 'rgba(52,56,82,0.9)'; ctx.beginPath(); ctx.moveTo(len - 16, 0); ctx.lineTo(len - 34, -8); ctx.lineTo(len - 34, 8); ctx.closePath(); ctx.fill();
       ctx.translate(len * 0.5, 0); if (Math.abs(ang) > Math.PI / 2) ctx.rotate(Math.PI);
       ctx.font = `italic 700 28px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.lineWidth = 7; ctx.strokeStyle = 'rgba(236,224,188,0.92)';
-      const txt = `${k + 3}: ${String(L.bearing).padStart(3, '0')}\u00b0 \u00b7 ${L.dist} m`;
+      const txt = `${k + 3}: ${String(L.bearing).padStart(3, '0')}\u00b0 (${windKort(L.bearing)}) \u00b7 ${L.dist} m`;
       ctx.strokeText(txt, 0, -10); ctx.fillText(txt, 0, -10); ctx.restore();
     });
   }
@@ -403,7 +403,7 @@ export function drawMap(world, extra = {}) {
     ctx.fillStyle = 'rgba(52,56,82,0.9)'; ctx.beginPath(); ctx.moveTo(len - 20, 0); ctx.lineTo(len - 38, -8); ctx.lineTo(len - 38, 8); ctx.closePath(); ctx.fill();
     ctx.translate(len * 0.5, 0); if (Math.abs(ang) > Math.PI / 2) ctx.rotate(Math.PI);
     ctx.font = `italic 700 30px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.lineWidth = 7; ctx.strokeStyle = 'rgba(236,224,188,0.92)';
-    const txt = `dag 1: koers ${String(PRELUDE.bearing).padStart(3, '0')}\u00b0  \u00b7  ${PRELUDE.dist} m`;
+    const txt = `dag 1: koers ${String(PRELUDE.bearing).padStart(3, '0')}\u00b0 (${windKort(PRELUDE.bearing)})  \u00b7  ${PRELUDE.dist} m`;
     ctx.strokeText(txt, 0, -12); ctx.fillText(txt, 0, -12); ctx.restore();
     ctx.fillStyle = '#a3291c'; ctx.beginPath(); ctx.moveTo(x0, y0 - 9); ctx.lineTo(x0 + 8, y0 + 6); ctx.lineTo(x0 - 8, y0 + 6); ctx.closePath(); ctx.fill();
     label(ctx, 'start (dag 1)', x0 + 14, y0 + 10, { size: 29, italic: true, bold: true, color: '#a3291c', align: 'left' });
@@ -524,7 +524,7 @@ export function drawMap(world, extra = {}) {
   // potloodnotitie van de officier
   ctx.save(); ctx.translate(MX + 14, CH - 30); ctx.rotate(-0.012);
   ctx.font = `italic 31px ${SERIF}`; ctx.fillStyle = 'rgba(52,56,82,0.86)'; ctx.textAlign = 'left';
-  const T = (b) => String(b).padStart(3, '0') + '\u00b0';
+  const T = (b) => String(b).padStart(3, '0') + '\u00b0 (' + windKort(b) + ')';
   if (PRELUDE) ctx.fillText(`Dag 1: ${T(PRELUDE.bearing)} naar de post. Dag 2: vanaf de grenssteen ${T(LEGS[0].bearing)} naar ${LV.waypoint.map}, daar ${T(LEGS[1].bearing)}.`, 0, 0);
   else ctx.fillText(`Opdracht: 1) vanaf de grenssteen ${T(LEGS[0].bearing)} naar ${LV.waypoint.map} \u2014 2) daar ${T(LEGS[1].bearing)} naar de bestemming.`, 0, 0);
   ctx.restore();

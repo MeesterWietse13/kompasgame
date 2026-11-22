@@ -116,9 +116,9 @@ const L3X = P(-52, 6), L3R = chain(L3X, [{ bearing: 225, dist: 38 }, { bearing: 
 const L3W = L3R[0].to, L3U = { x: 0.966, z: 0.258 };   // richting van de versperring bij de doorgang
 
 export const LEVEL_INFO = [
-  { n: 1, name: 'Het bos van Poste 7', sub: 'Herfstbos · jonge lijnwerker · 335°, een nacht, dan in de mist 025° en 105°' },
-  { n: 2, name: 'De ondergelopen IJzervlakte', sub: 'IJzerfront bij valavond · 030°, 120°, periscoop en terug' },
-  { n: 3, name: 'De bergkam in de sneeuw', sub: 'Winter op het front · 305°, 340°, periscoop, 225° en 165°' },
+  { n: 1, name: 'Het bos van Poste 7', sub: 'Herfstbos · jonge lijnwerker · 335° (NW), een nacht, dan in de mist 025° (NO) en 105° (O)' },
+  { n: 2, name: 'De ondergelopen IJzervlakte', sub: 'IJzerfront bij valavond · 030° (NO), 120° (ZO), periscoop en terug' },
+  { n: 3, name: 'De bergkam in de sneeuw', sub: 'Winter op het front · 305° (NW), 340° (N), periscoop, 225° (ZW) en 165° (Z)' },
 ];
 
 // De spoorwegberm en de overstroming in level 2
@@ -181,9 +181,9 @@ const DEFS = {
     arrival: `<p>De lijn bij paal <b>N° 47</b> is hersteld, en de telefoon in Poste 7 werkt weer.</p>
       <p>Gisteren kwam je op <b>335°</b> bij de post aan. Vandaag liep je door de dikke mist in twee stukken. Eerst op <b>025°</b> naar Les Roches, met een boog om het Zwarte Ven. Bij de rotsen schoot je opnieuw met je kompas: <b>105°</b>, over de brug, tot hier.</p>
       <p>Zo doen echte oriëntatielopers het ook: ze kiezen een groot <b>tussenpunt</b> dat je niet kunt missen. Knap werk, lijnwerker!</p>`,
-    tips: ['Zet bij de grenssteen de ring van je kompas op 025 en draai jezelf tot de rode naald in de rode poort staat. Kies een boom recht voor je, loop ernaartoe en herhaal dat.',
+    tips: ['Zet bij de grenssteen de ring van je kompas op 025 (ongeveer het noordoosten, NO) en draai jezelf tot de rode naald in de rode poort staat. Kies een boom recht voor je, loop ernaartoe en herhaal dat.',
       'Waarom niet rechtdoor? Op de rechte lijn ligt het Zwarte Ven, een moeras waarin je wegzakt. Daarom ga je eerst naar Les Roches: grote rotsen die je niet kunt missen.',
-      'Bij de rotsen staat een paaltje met een bordje. Ga ernaast staan en zet je kompas op 105. Je steekt de beek over via de brug en loopt door tot de telegraafpaal, licht van kleur met een witte band.'],
+      'Bij de rotsen staat een paaltje met een bordje. Ga ernaast staan en zet je kompas op 105 (ongeveer het oosten, O). Je steekt de beek over via de brug en loopt door tot de telegraafpaal, licht van kleur met een witte band.'],
   },
 
   2: {
@@ -259,9 +259,9 @@ const DEFS = {
       <p><i>"Kijk maar eens door de periscoop: vóór ons ligt alleen water. In oktober 1914 hebben onze soldaten, geholpen door mensen uit de streek die de sluizen kenden, bij vloed de sluizen van Nieuwpoort opengezet. Het zeewater liep de polders in, tot aan deze spoorwegberm tussen Nieuwpoort en Diksmuide. De Duitsers konden niet verder, en sindsdien ligt het front hier vast."</i></p>
       <p><i>"Diep graven gaat hier niet: na een halve meter sta je al in het water. Daarom bouwen we onze loopgraven óp, met muren van zandzakken: <b>borstweringen</b>."</i></p>
       <p>Je kwam in twee stukken. Eerst op <b>030°</b> naar de hoeve Den Hoek, want alleen daar is een doorgang in het prikkeldraad. Daar schoot je opnieuw met je kompas: <b>120°</b>, door de verbindingsgang tot op de berm.</p>`,
-    tips: ['Zet bij de grenssteen je kompas op 030: je kijkt dan naar het noordoosten. Onderweg steek je een sloot over via een loopplank.',
+    tips: ['Zet bij de grenssteen je kompas op 030 (ongeveer het noordoosten, NO): je kijkt dan ongeveer naar het noordoosten, en heel precies naar 030°. Onderweg steek je een sloot over via een loopplank.',
       'Waarom niet rechtdoor naar de berm? Achter de linies staat een lange rij prikkeldraad. Die moet de vijand tegenhouden als hij ooit doorbreekt. Er is maar één doorgang: bij de ruïne van de hoeve Den Hoek.',
-      'In de doorgang staat een paaltje. Zet daar je kompas op 120. Na ongeveer 22 meter is de ingang van de verbindingsgang. Volg die tussen de borstweringen tot op de spoorwegberm.'],
+      'In de doorgang staat een paaltje. Zet daar je kompas op 120 (ongeveer het zuidoosten, ZO). Na ongeveer 22 meter is de ingang van de verbindingsgang. Volg die tussen de borstweringen tot op de spoorwegberm.'],
   },
 
   3: {
@@ -321,9 +321,9 @@ const DEFS = {
     arrival: `<p>Onder een dak van balken en zandzakken, met een kleine Franse vlag erop, staat een soldaat aan de periscoop. Hij neemt je boodschap aan. <b>« Merci, petit ! »</b> <i>(Dank je, jongen!) "Warm je wat op."</i></p>
       <p>Van hier zien de soldaten ver over het <b>niemandsland</b>. In de Vogezen lag het front vaak hoog op de bergkammen. In de winter vroren de loopgraven dicht en lag er meters sneeuw.</p>
       <p>Je kwam in twee stukken. Eerst op <b>305°</b> naar de passerelle, de enige plek waar je over de diepe kloof kon. Aan de overkant schoot je opnieuw: <b>340°</b>, bergop en door de verbindingsloopgraaf tot op de top.</p>`,
-    tips: ['Zet bij de grenssteen je kompas op 305: je kijkt dan naar het noordwesten. Je loopt licht bergaf, naar de kloof toe.',
+    tips: ['Zet bij de grenssteen je kompas op 305 (ongeveer het noordwesten, NW): je kijkt dan ongeveer naar het noordwesten, en heel precies naar 305°. Je loopt licht bergaf, naar de kloof toe.',
       'Waarom niet rechtdoor naar de top? Tussen de col en de top ligt een diepe kloof met steile wanden. Er is maar één plek waar je over kunt: de passerelle, een smalle loopbrug die de Alpenjagers (chasseurs alpins) bouwden.',
-      'Aan de overkant van de passerelle staat een paaltje. Zet daar je kompas op 340. Na ongeveer 30 meter bergop is de ingang van de verbindingsloopgraaf. Ga naar beneden en volg de gang tot op de top.'],
+      'Aan de overkant van de passerelle staat een paaltje. Zet daar je kompas op 340 (ongeveer het noorden, N). Na ongeveer 30 meter bergop is de ingang van de verbindingsloopgraaf. Ga naar beneden en volg de gang tot op de top.'],
   },
 };
 
@@ -350,6 +350,16 @@ export function routeDist(x, z) {
   for (const L of (LV.recon && LV.recon.legs) || []) d = Math.min(d, distToPolyline(x, z, [L.from, L.to]).d);   // level 3: de weg naar de mortierploeg
   return d;
 }
+/** De 8 windrichtingen. Een koers in graden hoort "ongeveer" bij de dichtstbijzijnde windrichting. */
+const WIND = [['N', 'noorden'], ['NO', 'noordoosten'], ['O', 'oosten'], ['ZO', 'zuidoosten'], ['Z', 'zuiden'], ['ZW', 'zuidwesten'], ['W', 'westen'], ['NW', 'noordwesten']];
+const windOf = (deg) => WIND[Math.round((((+deg % 360) + 360) % 360) / 45) % 8];
+/** 'NW' */
+export const windKort = (deg) => windOf(deg)[0];
+/** 'noordwesten' */
+export const windLang = (deg) => windOf(deg)[1];
+/** ' (ongeveer het noordwesten, NW)': achter een koers in een zin. */
+export const windHaak = (deg) => ` (ongeveer het ${windOf(deg)[1]}, ${windOf(deg)[0]})`;
+
 /** Level 1, dag 1: de koers van de bosweg naar de post (daar slaap je, 's morgens begint de mistige tocht). */
 export const PRELUDE = LV.prelude ? { ...LV.prelude, spawn: { x: LV.prelude.start.x, z: LV.prelude.start.z, bearing: LV.prelude.spawnBearing } } : null;
 export const POND = LV.pond || null;
