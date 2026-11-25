@@ -91,6 +91,15 @@ export class Hud {
 
   setTip(text) { $('help-tip').textContent = text; }
 
+  /** Pijl op het scherm: `rel` = hoeveel graden je nog moet draaien (0 = rechtdoor, 90 = rechts), of null om hem te verbergen. */
+  setGuide(rel, meters) {
+    const el = $('guide'), off = rel === null;
+    if (off !== el.classList.contains('hidden')) el.classList.toggle('hidden', off);
+    if (off) { this._guideTxt = null; return; }
+    $('guide-arrow').setAttribute('transform', `rotate(${rel.toFixed(1)})`);
+    const txt = `Naar de uitgang: nog ${Math.max(1, Math.round(meters))} m`;
+    if (txt !== this._guideTxt) { this._guideTxt = txt; $('guide-text').textContent = txt; }
+  }
   toast(text, ms = 4200) {
     const el = $('toast');
     el.textContent = text; el.classList.remove('hidden'); el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';

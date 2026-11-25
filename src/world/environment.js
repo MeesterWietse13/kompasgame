@@ -146,15 +146,16 @@ export function createEnvironment(scene, T) {
   }
   // Van de schemering van het level naar een donkere nacht (level 2, de terugweg). k: 0 = zoals het level begint, 1 = nacht.
   const base = { fog: V(...THEME.fog), fs: V(...THEME.fogSun), fd: THEME.fogDensity[0], sunI: THEME.sunI, hemiI: THEME.hemiI,
-    hs: C(THEME.hemiSky), hg: C(THEME.hemiGround), zen: V(...THEME.zenith), night: THEME.night || 0 };
-  const dark = { fog: V(0.06, 0.072, 0.11), fs: V(0.2, 0.11, 0.1), fd: 0.024, sunI: 0.06, hemiI: 1.45,
-    hs: C(0x34405e), hg: C(0x191917), zen: V(0.015, 0.022, 0.055), night: 0.9 };
+    hs: C(THEME.hemiSky), hg: C(THEME.hemiGround), zen: V(...THEME.zenith), night: THEME.night || 0, sun: C(THEME.sun) };
+  // Een maanverlichte nacht: ook op een Chromebook met een zwak scherm moet je de grond, de wanden en de planken zien.
+  const dark = { fog: V(0.105, 0.13, 0.2), fs: V(0.17, 0.17, 0.23), fd: 0.02, sunI: 0.4, sun: C(0x9db4e6), hemiI: 2.8,
+    hs: C(0x6f83b4), hg: C(0x4a4d55), zen: V(0.03, 0.045, 0.1), night: 0.8 };
   function setDark(k) {
     atmo.uNight.value = base.night + (dark.night - base.night) * k;
     atmo.uFogColor.value.lerpVectors(base.fog, dark.fog, k);
     atmo.uFogSunColor.value.lerpVectors(base.fs, dark.fs, k);
     atmo.uFogParams.value.x = base.fd + (dark.fd - base.fd) * k;   // dichtere nevel: je ziet niet meer ver
-    sun.intensity = base.sunI + (dark.sunI - base.sunI) * k;
+    sun.intensity = base.sunI + (dark.sunI - base.sunI) * k; sun.color.copy(base.sun).lerp(dark.sun, k);
     hemi.intensity = base.hemiI + (dark.hemiI - base.hemiI) * k;
     hemi.color.copy(base.hs).lerp(dark.hs, k); hemi.groundColor.copy(base.hg).lerp(dark.hg, k);
     sky.material.uniforms.uZenith.value.lerpVectors(base.zen, dark.zen, k);
